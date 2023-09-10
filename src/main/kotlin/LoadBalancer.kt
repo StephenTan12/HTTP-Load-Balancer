@@ -26,7 +26,7 @@ class LoadBalancer {
                 logger.info("Accepted client connection from: $client")
 
                 launch(Dispatchers.IO) {
-                    LoadBalancerToClientSocketHandler(client).handleClient()
+                    ClientRequestHandler.handleClient(client)
                 }
             }
         }

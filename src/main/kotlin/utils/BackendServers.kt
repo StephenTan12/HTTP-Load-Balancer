@@ -1,13 +1,12 @@
 package utils
 
-import ClientToServerSocketHandler
+import ClientRequestHandler.writeToBackendServer
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.lang.Exception
 import java.net.Socket
-import kotlin.concurrent.read
 
 object BackendServers {
     private val ports: List<Int> = arrayListOf(
@@ -27,13 +26,14 @@ object BackendServers {
             logger.info("Checking Server Health")
             availablePorts.clear()
 
-            var socket: Socket? = null
-
             for (port in ports) {
                 logger.info("Checking Server Health of Port $port")
+                var socket: Socket? = null
+
                 try {
                     socket = Socket(HOSTNAME, port)
-                    ClientToServerSocketHandler(socket).run(port)
+
+                    writeToBackendServer(socket, port)
 
                     val byteArray =
                         socket.getInputStream().readBytes()
